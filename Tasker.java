@@ -181,7 +181,6 @@ public class Tasker  {
                         //Log.d("CODE:","Text " + TEXT);
                         //headlines.add(TEXT);
                         links.set(4, TEXT);
-                        System.out.println(TEXT);
                         isImageSet = false;
                         IMAGE = false;
                         finishedimage = true;
@@ -310,6 +309,11 @@ public class Tasker  {
         //Log.d("myTag", "Headlines Sent To Master");
 
         //Send the information to the master
+        for(int i = 0;i<params.size();i++)
+        {
+        	System.out.println(params.get(i));
+        }
+        
         return params;
     }
 }

@@ -246,12 +246,14 @@ public class Scrape implements Comparator<ArrayList<String>> {
 							}
 							break;
 						} else {
+							
 							MASTERAM.addAll(head);
+							System.out.println("TOTAL: " + MASTERAM.size());
 						}
 					} else {
 						break;
 					}
-					if(MASTERAM.size()==50)
+					if(MASTERAM.size()==100)
 					{
 						return;
 					}
@@ -446,7 +448,6 @@ public class Scrape implements Comparator<ArrayList<String>> {
 				for(int J =0;J< MASTERZ.get(i).size();J++)
 				{
 					String test =  MASTERZ.get(i).get(J).toString().replaceAll(",", "");
-					System.out.println(test);
 					MASTERZ.get(i).set(J,test);
 				}
 			}
@@ -454,7 +455,6 @@ public class Scrape implements Comparator<ArrayList<String>> {
 			for (int line = 0; line < MASTERZ.size(); line++) {
 
 				List<String> test = MASTERZ.get(line);
-				System.out.println(MASTERZ.get(line));
 				String Item = test.toString().replaceAll("[\\s\\[\\]]", "");
 				writer.write(Item + "\n");
 			}
@@ -621,24 +621,12 @@ public class Scrape implements Comparator<ArrayList<String>> {
 		//test.MASTERCSV.addAll(test.ParseCSV(csvname));
 			//test.MASTERCSV.addAll(test.ParseCSV());
 	    //test.InsertInto(test.MASTERCSV,1);
-		test.scrapeAm = true;
-		test.exportAmCSV = true;
-		if(test.scrapeAm)
-		{
-		test.DoScrape();
-			System.out.println("Scrape completed!");
-		}
-//		
+
 //		if(test.pushAmazon)
 //		{
 //			test.InsertInto(test.MASTERAM,2);
 //		}
 //
-		if(test.exportAmCSV)
-		{
-		test.ExportCSV(test.MASTERAM);
-		}
-		
 
 		try {
 			test.ReadConfig();
