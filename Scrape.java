@@ -14,18 +14,23 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -443,6 +448,15 @@ public class Scrape implements Comparator<ArrayList<String>> {
 
 		try {
 			FileWriter writer = new FileWriter("exports/sto1.csv");
+			Writer fstream = null;
+			BufferedWriter out = null;
+			try {
+			    fstream = new OutputStreamWriter(new FileOutputStream("exports/sto1.csv"), StandardCharsets.UTF_8);
+			}
+			catch(Error r)
+			{
+				
+			}
 			for(int i =0;i<MASTERZ.size();i++)
 			{
 				for(int J =0;J< MASTERZ.get(i).size();J++)
@@ -451,14 +465,14 @@ public class Scrape implements Comparator<ArrayList<String>> {
 					MASTERZ.get(i).set(J,test);
 				}
 			}
-			writer.write("ASIN,Title,Brand,URL,ImageURL,SalesRank"+ "\n");
+			fstream.write("ASIN,Title,Brand,URL,ImageURL,SalesRank"+ "\n");
 			for (int line = 0; line < MASTERZ.size(); line++) {
 
 				List<String> test = MASTERZ.get(line);
 				String Item = test.toString().replaceAll("[\\s\\[\\]]", "");
 				writer.write(Item + "\n");
 			}
-			writer.close();
+			fstream.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
