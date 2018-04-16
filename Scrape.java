@@ -131,8 +131,8 @@ public class Scrape implements Comparator<ArrayList<String>> {
 			MASTERAM.clear();
 		ITERATORPIC = 0;
 		// AWS ACCOUNT INFO BELOW
-		String AWS_ACCESS_KEY_ID = "AKIAIQAG42NDBT7BHR4Q";
-		String AWS_SECRET_KEY = "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";
+		String AWS_ACCESS_KEY_ID = "AKIAJU3IRORXAYOWB63A";
+		String AWS_SECRET_KEY = "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";
 		String ENDPOINT = "webservices.amazon.com";
 		// HELPER TO SIGN REQUESTS
 		SignedRequestsHelper helper;
@@ -159,9 +159,9 @@ public class Scrape implements Comparator<ArrayList<String>> {
 																					// param
 					params.put("Service", "AWSECommerceService");
 					params.put("Operation", "ItemSearch");
-					params.put("AWSAccessKeyId", "AKIAIQAG42NDBT7BHR4Q");
+					params.put("AWSAccessKeyId", "AKIAJU3IRORXAYOWB63A");
 					// AWS Associate Tag
-					params.put("AssociateTag", "fuzwal-20");
+					params.put("AssociateTag", "sharebert2-20");
 					params.put("SearchIndex", SEARCHINDEX.get(S)); // Instead of
 																	// 'Blended',
 																	// can loop
@@ -250,6 +250,11 @@ public class Scrape implements Comparator<ArrayList<String>> {
 					} else {
 						break;
 					}
+					if(MASTERAM.size()==10)
+					{
+						return;
+					}
+					
 
 					// Log.d("myTag", Integer.toString(AlphaN));
 
@@ -371,9 +376,20 @@ public class Scrape implements Comparator<ArrayList<String>> {
 
 		try {
 			FileWriter writer = new FileWriter("sto1.csv");
+			for(int i =0;i<MASTERZ.size();i++)
+			{
+				for(int J =0;J< MASTERZ.get(i).size();J++)
+				{
+					String test =  MASTERZ.get(i).get(J).toString().replaceAll(",", "");
+					System.out.println(test);
+					MASTERZ.get(i).set(J,test);
+				}
+			}
+			writer.write("ASIN,Title,Brand,URL,ImageURL,SalesRank"+ "\n");
 			for (int line = 0; line < MASTERZ.size(); line++) {
 
 				List<String> test = MASTERZ.get(line);
+				System.out.println(MASTERZ.get(line));
 				String Item = test.toString().replaceAll("[\\s\\[\\]]", "");
 				writer.write(Item + "\n");
 			}
@@ -512,29 +528,30 @@ public class Scrape implements Comparator<ArrayList<String>> {
 	public static void main(String[] args) throws SQLException {
 		System.out.println("Scrape starting...");
 		Scrape test = new Scrape();
-		test.startConnection();
-		Scanner s = new Scanner(System.in);
-		System.out.print("Enter CSV name: ");
-		String csvname = s.next();
-		test.MASTERCSV.addAll(test.ParseCSV(csvname));
-			//test.MASTERCSV.addAll(test.ParseCSV());
-	    test.InsertInto(test.MASTERCSV,1);
 		
-//		if(test.scrapeAm)
-//		{
-//			test.DoScrape();
-//			System.out.println("Scrape completed!");
-//		}
+		//Scanner s = new Scanner(System.in);
+		//System.out.print("Enter CSV name: ");
+		//String csvname = s.next();
+		//test.MASTERCSV.addAll(test.ParseCSV(csvname));
+			//test.MASTERCSV.addAll(test.ParseCSV());
+	    //test.InsertInto(test.MASTERCSV,1);
+		test.scrapeAm = true;
+		test.exportAmCSV = true;
+		if(test.scrapeAm)
+		{
+		test.DoScrape();
+			System.out.println("Scrape completed!");
+		}
 //		
 //		if(test.pushAmazon)
 //		{
 //			test.InsertInto(test.MASTERAM,2);
 //		}
 //
-//		if(test.exportAmCSV)
-//		{
-//			test.ExportCSV(test.MASTERAM);
-//		}
+		if(test.exportAmCSV)
+		{
+		test.ExportCSV(test.MASTERAM);
+		}
 		
 
 	}

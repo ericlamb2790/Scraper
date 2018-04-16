@@ -162,7 +162,7 @@ public class Tasker  {
                         String TEXT = xpp.getText();
                         Scrape.outLog.println("TASKER-      LOGGED SALESRANK: " + TEXT);
                         //Log.d("CODE:","Text " + TEXT);
-                        links.set(1, TEXT);
+                        links.set(5, TEXT);
                     }
 
                     //Sets the Affiliate Link to links[1]
@@ -170,17 +170,18 @@ public class Tasker  {
                         String TEXT = xpp.getText();
                         Scrape.outLog.println("TASKER-      LOGGED AFFILIATE URL: " + TEXT);
                         //Log.d("CODE:","Text " + TEXT);
-                        links.set(2, TEXT);
+                        links.set(3, TEXT);
                     }
 
                     //If we are under the ImageSet tag, and found a Large Image, and do not currently have an image stored, store image url in links[2] and reset flags
-                    else if (TAG.equalsIgnoreCase("URL") && IMAGE && isImageSet && !finishedimage) {
+                    else if (TAG.equalsIgnoreCase("URL") && IMAGE && !finishedimage) {
 
                         String TEXT = xpp.getText();
                         Scrape.outLog.println("TASKER-      LOGGED LARGEIMAGE: " + TEXT);
                         //Log.d("CODE:","Text " + TEXT);
                         //headlines.add(TEXT);
-                        links.set(3, TEXT);
+                        links.set(4, TEXT);
+                        System.out.println(TEXT);
                         isImageSet = false;
                         IMAGE = false;
                         finishedimage = true;
@@ -192,7 +193,7 @@ public class Tasker  {
                         String TEXT = xpp.getText();
                         Scrape.outLog.println("TASKER-      LOGGED BRAND: " + TEXT);
                         //Log.d("CODE:","Text " + TEXT);
-                        links.set(4, TEXT);
+                        links.set(2, TEXT);
 
                     }
 
@@ -202,8 +203,8 @@ public class Tasker  {
                         Scrape.outLog.println("TASKER-      ITEM MISSING BRAND!");
                         //Log.d("CODE:","Text " + TEXT);
                         //links.add(TEXT);
-                        if (links.get(4).equalsIgnoreCase("Unavailable")) {
-                            links.set(4, TEXT);
+                        if (links.get(2).equalsIgnoreCase("Unavailable")) {
+                            links.set(2, TEXT);
                         }
                         Scrape.outLog.println("TASKER-      LOGGED PUBLISHER: " + TEXT);
 
@@ -215,7 +216,7 @@ public class Tasker  {
 
                         String TEXT = xpp.getText();
                         //Log.d("CODE:","Text " + TEXT);
-                        links.set(5, TEXT);
+                        links.set(1, TEXT);
 
                         //If the product doesn't have an ASIN, we've reached the end of the product list
                         for (int i = 0; i < FIELDNUM; i++) {
