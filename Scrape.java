@@ -80,15 +80,15 @@ public class Scrape implements Comparator<ArrayList<String>> {
 
 	public Scrape() {
 		// region AmazonSetSearchIndexArray
-		SEARCHINDEX.add("Appliances");
-		SEARCHINDEX.add("ArtsAndCrafts");
-		SEARCHINDEX.add("Automotive");
-		SEARCHINDEX.add("Baby");
-		SEARCHINDEX.add("Beauty");
-		SEARCHINDEX.add("Blended");
-		SEARCHINDEX.add("Books");
-		SEARCHINDEX.add("Collectibles");
-		SEARCHINDEX.add("Electronics");
+//		SEARCHINDEX.add("Appliances");
+//		SEARCHINDEX.add("ArtsAndCrafts");
+//		SEARCHINDEX.add("Automotive");
+//		SEARCHINDEX.add("Baby");
+//		SEARCHINDEX.add("Beauty");
+//		SEARCHINDEX.add("Blended");
+//		SEARCHINDEX.add("Books");
+//		SEARCHINDEX.add("Collectibles");
+//		SEARCHINDEX.add("Electronics");
 		SEARCHINDEX.add("Fashion");
 		SEARCHINDEX.add("FashionBaby");
 		SEARCHINDEX.add("FashionBoys");
@@ -258,7 +258,7 @@ public class Scrape implements Comparator<ArrayList<String>> {
 					} else {
 						break;
 					}
-					if(MASTERAM.size()==100)
+					if(MASTERAM.size()==500)
 					{
 						return;
 					}
@@ -470,7 +470,7 @@ public class Scrape implements Comparator<ArrayList<String>> {
 
 				List<String> test = MASTERZ.get(line);
 				String Item = test.toString().replaceAll("[\\s\\[\\]]", "");
-				writer.write(Item + "\n");
+				fstream.write(Item + "\n");
 			}
 			fstream.close();
 		} catch (IOException e) {
