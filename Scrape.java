@@ -470,7 +470,7 @@ public class Scrape implements Comparator<ArrayList<String>> {
 
 				List<String> test = MASTERZ.get(line);
 				String Item = test.toString().replaceAll("[\\s\\[\\]]", "");
-				writer.write(Item + "\n");
+				fstream.write(Item + "\n");
 			}
 			fstream.close();
 		} catch (IOException e) {
