@@ -12,6 +12,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,7 +41,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -58,12 +59,12 @@ public class Scrape implements Comparator<ArrayList<String>> {
 																								// ARRAY
 																								// OF
 																								// ITEMS
-//	CONFIG BOOLS
-	private boolean parseCSV = true;
+	// CONFIG BOOLS
+	private boolean pushCSV = false;
 	private boolean scrapeAm = false;
 	private boolean pushAmazon = false;
 	private boolean exportAmCSV = false;
-	
+
 	private ArrayList<ArrayList<String>> MASTERCSV = new ArrayList<ArrayList<String>>(NUMPAGES);
 	private ArrayList<String> SEARCHINDEX = new ArrayList<>();
 	final String aChar = new Character((char) 64).toString(); // PLACEMENT TO
@@ -250,7 +251,7 @@ public class Scrape implements Comparator<ArrayList<String>> {
 					} else {
 						break;
 					}
-					if(MASTERAM.size()==10)
+					if(MASTERAM.size()==50)
 					{
 						return;
 					}
@@ -323,40 +324,24 @@ public class Scrape implements Comparator<ArrayList<String>> {
 		return lhs.get(1).compareTo(rhs.get(1));
 	}
 
-	public ArrayList<ArrayList<String>> ParseCSV(String name) {
+	public ArrayList<ArrayList<String>> ParseCSVSS(String _FileNamePath) {
 		ArrayList<ArrayList<String>> MASTERZ = new ArrayList<ArrayList<String>>();
 		ArrayList<String> TESTARR = new ArrayList<String>();
 		Reader in;
 		try {
-			in = new FileReader("csv/"+name+".csv");
-			//in = new FileReader("csv/walmart.csv");
+			in = new FileReader(_FileNamePath);
 			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
 			for (CSVRecord record : records) {
 				String columnOne = record.get(0);
 				String delim = "[|]";
 				String[] tokens = columnOne.split(delim);
-				//System.out.println(Arrays.toString(tokens));
-				try {
-//					for(String test : tokens)
-//					{
-//						System.out.print(test+",");
-//					}
 				TESTARR.add(tokens[0]);
 				TESTARR.add(tokens[1]);
 				TESTARR.add(tokens[3]);
 				TESTARR.add(tokens[4]);
 				TESTARR.add(tokens[6]);
-				TESTARR.add(tokens[21]);
-				System.out.print(MASTERZ.size()+": ");
-				System.out.println(Arrays.toString(TESTARR.toArray()));
-				
 				MASTERZ.add(TESTARR);
 				TESTARR = new ArrayList<String>();
-				}
-				catch (ArrayIndexOutOfBoundsException exception) {
-					// TODO Auto-generated catch block
-					continue;
-				}
 				// String columnTwo = record.get(1);
 
 			}
@@ -364,10 +349,90 @@ public class Scrape implements Comparator<ArrayList<String>> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//ExportCSV(MASTERZ);
-		
-		return MASTERZ;
+		// ExportCSV(MASTERZ);
 
+		return MASTERZ;
+	}
+	
+	public ArrayList<ArrayList<String>> ParseCSVSS2(String _FileNamePath) {
+		ArrayList<ArrayList<String>> MASTERZ = new ArrayList<ArrayList<String>>();
+		ArrayList<String> TESTARR = new ArrayList<String>();
+		Reader in;
+		try {
+			in = new FileReader(_FileNamePath);
+			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+			for (CSVRecord record : records) {
+				int check = 0;
+				String column1 = record.get(check);
+
+				String delim = "[|]";
+				String[] tokens = column1.split(delim);
+
+				TESTARR.add(tokens[0]);
+				TESTARR.add(tokens[1]);
+				TESTARR.add(tokens[2]);
+				TESTARR.add(tokens[3]);
+				TESTARR.add(tokens[4]);
+				TESTARR.add(tokens[5]);
+				MASTERZ.add(TESTARR);
+				TESTARR = new ArrayList<String>();
+				check++;
+				// String columnTwo = record.get(1);
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// ExportCSV(MASTERZ);
+
+		return MASTERZ;
+	}
+//Eventually parse category here
+	public ArrayList<ArrayList<String>> ParseCSVCJ(String _csvPathFile) {
+		ArrayList<ArrayList<String>> MASTERZ = new ArrayList<ArrayList<String>>();
+		//has 22 fields
+		ArrayList<String> TESTARR = new ArrayList<String>();
+		Reader in;
+		try {
+			in = new FileReader(_csvPathFile);
+			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+			int catchMe = 0;
+			for (CSVRecord record : records) {
+				if(catchMe > 0)
+				{
+					
+				String columnOne = record.get(3);
+				String columnTwo = record.get(4);
+				String columnThree = record.get(1);
+				String columnFour = record.get(13);
+				String columnFive = record.get(11);//BROKEN ATM, REGEDIT OUT THE HTML TO GET IMAGE LINK
+				String delim = "[|]";
+				String[] tokens1 = columnOne.split(delim);
+				String[] tokens2 = columnTwo.split(delim);
+				String[] tokens3 = columnThree.split(delim);
+				String[] tokens4 = columnFour.split(delim);
+				String[] tokens5 = columnFive.split(delim);
+				
+				TESTARR.add(tokens1[0]);
+				TESTARR.add(tokens2[0]);
+				TESTARR.add(tokens3[0]);
+				TESTARR.add(tokens4[0]);
+				TESTARR.add(tokens5[0]);
+				MASTERZ.add(TESTARR);
+				TESTARR = new ArrayList<String>();
+				// String columnTwo = record.get(1);
+				}
+				catchMe++;
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// ExportCSV(MASTERZ);
+
+		return MASTERZ;
 	}
 
 	public void ExportCSV(ArrayList<ArrayList<String>> MASTERZ) {
@@ -375,7 +440,7 @@ public class Scrape implements Comparator<ArrayList<String>> {
 		// String Item = String.join(",",test.toString());
 
 		try {
-			FileWriter writer = new FileWriter("sto1.csv");
+			FileWriter writer = new FileWriter("exports/sto1.csv");
 			for(int i =0;i<MASTERZ.size();i++)
 			{
 				for(int J =0;J< MASTERZ.get(i).size();J++)
@@ -399,134 +464,155 @@ public class Scrape implements Comparator<ArrayList<String>> {
 			e.printStackTrace();
 		}
 	}
-	private void InsertInto(ArrayList<ArrayList<String>> test222,int AFFILIATE) throws SQLException
-	{
-					for(int i = 0;i<test222.size();i++)
-					{
-						if(AFFILIATE == 1) //1 for SAS 2 For AMAZON
-						{
-							try
-							{
-							 String query = " insert into Affiliate_Products2 (ASIN, Title, Website, URL,ImageURL, Category)"
-						             + " values (?, ?, ?, ?, ?, ?)";
-		
-				              // create the mysql insert preparedstatement
-				              PreparedStatement preparedStmt = conn.prepareStatement(query);
-				              preparedStmt.setString (1, test222.get(i).get(0).toString());
-				              preparedStmt.setString (2, test222.get(i).get(1).toString());
-				              preparedStmt.setString (3, test222.get(i).get(2).toString());
-				              preparedStmt.setString (4, test222.get(i).get(3).toString());
-				              preparedStmt.setString (5, test222.get(i).get(4).toString());
-				              preparedStmt.setString (6, test222.get(i).get(5).toString());
-				              preparedStmt.execute();
-							}
-						    catch (Exception e)
-						    {
-						    	
-						        System.out.println(e.getMessage());
-						    }
-						}
-						if(AFFILIATE == 2)
-						{
-							try
-							{
-								String query = " insert into Amazon_Products (ASIN, SalesRank, URL, ImageURL, Brand, Title)"
-							                + " values (?, ?, ?, ?, ?, ?)";
-		
-				              // create the mysql insert preparedstatement
-				              PreparedStatement preparedStmt = conn.prepareStatement(query);
-				              preparedStmt.setString (1, test222.get(i).get(0).toString());
-				              preparedStmt.setString (2, test222.get(i).get(1).toString());
-				              preparedStmt.setString (3, test222.get(i).get(2).toString());
-				              preparedStmt.setString (4, test222.get(i).get(3).toString());
-				              preparedStmt.setString (5, test222.get(i).get(4).toString());
-				              preparedStmt.setString (6, test222.get(i).get(5).toString());
-				              preparedStmt.execute();
-				              
-							}
-						    catch (Exception e)
-						    {
-						    	
-						        System.out.println(e.getMessage());
-						        if(e.getMessage().contains("Duplicate"))
-						        {
-						        	try
-									{
-										String query = " update Amazon_Products set SalesRank = ?, URL = ?, ImageURL = ?, Brand = ?, Title = ?"
-									                + " where ASIN='" + test222.get(i).get(0).toString() + "'";
-				
-						              // create the mysql insert preparedstatement
-						              PreparedStatement preparedStmt = conn.prepareStatement(query); 
-						              preparedStmt.setString (1, test222.get(i).get(1).toString());
-			                          preparedStmt.setString (2, test222.get(i).get(2).toString());
-			                          preparedStmt.setString (3, test222.get(i).get(3).toString());
-			                          preparedStmt.setString (4, test222.get(i).get(4).toString());
-			                          preparedStmt.setString (5, test222.get(i).get(5).toString());
-						              preparedStmt.execute();
-						              
 
-									}
-						        	catch (Exception e2)
-								    {
-								    	
-								        System.out.println(e2.getMessage());
-								    }
-						        	
-						        }
-						    }
+	private void InsertInto(ArrayList<ArrayList<String>> test222, int AFFILIATE) throws SQLException {
+		for (int i = 0; i < test222.size(); i++) {
+			if (AFFILIATE == 1) // 1 for SAS 2 For AMAZON
+			{
+				try {
+					String query = " insert into Affiliate_Products2 (ASIN, Title, Website, URL ,ImageURL)"
+							+ " values (?, ?, ?, ?, ?)";
+
+					// create the mysql insert preparedstatement
+					PreparedStatement preparedStmt = conn.prepareStatement(query);
+					preparedStmt.setString(1, test222.get(i).get(0).toString());
+					preparedStmt.setString(2, test222.get(i).get(1).toString());
+					preparedStmt.setString(3, test222.get(i).get(2).toString());
+					preparedStmt.setString(4, test222.get(i).get(3).toString());
+					preparedStmt.setString(5, test222.get(i).get(4).toString());
+					//preparedStmt.setString(5, test222.get(i).get(5).toString());
+					preparedStmt.execute();
+				} catch (Exception e) {
+
+					System.out.println(e.getMessage());
+				}
+			}
+			if (AFFILIATE == 2) {
+				try {
+					String query = " insert into Amazon_Products (ASIN, SalesRank, URL, ImageURL, Brand, Title, Category)"
+							+ " values (?, ?, ?, ?, ?, ?, ?)";
+
+					// create the mysql insert preparedstatement
+					PreparedStatement preparedStmt = conn.prepareStatement(query);
+					preparedStmt.setString(1, test222.get(i).get(0).toString());
+					preparedStmt.setString(2, test222.get(i).get(1).toString());
+					preparedStmt.setString(3, test222.get(i).get(2).toString());
+					preparedStmt.setString(4, test222.get(i).get(3).toString());
+					preparedStmt.setString(5, test222.get(i).get(4).toString());
+					preparedStmt.setString(6, test222.get(i).get(5).toString());
+					preparedStmt.setString(7, test222.get(i).get(6).toString());
+					preparedStmt.execute();
+
+				} catch (Exception e) {
+
+					System.out.println(e.getMessage());
+					if (e.getMessage().contains("Duplicate")) {
+						try {
+							String query = " update Amazon_Products set SalesRank = ?, URL = ?, ImageURL = ?, Brand = ?, Title = ?"
+									+ " where ASIN='" + test222.get(i).get(0).toString() + "'";
+
+							// create the mysql insert preparedstatement
+							PreparedStatement preparedStmt = conn.prepareStatement(query);
+							preparedStmt.setString(1, test222.get(i).get(1).toString());
+							preparedStmt.setString(2, test222.get(i).get(2).toString());
+							preparedStmt.setString(3, test222.get(i).get(3).toString());
+							preparedStmt.setString(4, test222.get(i).get(4).toString());
+							preparedStmt.setString(5, test222.get(i).get(5).toString());
+							preparedStmt.execute();
+
+						} catch (Exception e2) {
+
+							System.out.println(e2.getMessage());
 						}
+
 					}
+				}
+			}
+		}
 	}
-	private void startConnection() throws SQLException
-	{
-	    
-	    String url = "jdbc:mysql://sbclusteridapp124214.cluster-cpxq7h6ywwyb.us-east-1.rds.amazonaws.com:3306/";
-	    String dbName = "sbdbapp26732";
-	    String driver = "com.mysql.jdbc.Driver";
-	    String userName = "sbertrdsuser802";
-	    String password = "SBRDSPass0234!093243!2";
-	    
-	   //String url = "jdbc:mysql://sbertserver566homo2324.cpxq7h6ywwyb.us-east-1.rds.amazonaws.com:3306/";
-	   //String dbName = "sbertserver566homo2324";
-	   //String driver = "com.mysql.jdbc.Driver";
-	   //String userName = "sbertuser5homo2";
-	   //String password = "SBertSuperHomo393";
 
-	    try
-	    {
-	        Class.forName(driver).newInstance();
-	        conn = DriverManager.getConnection(url+dbName,userName,password);
-	        System.out.println("Connected to the database");
-	        //conn.close();
-	        //System.out.println("Disconnected from database");  
-	        
-	        //String query = " insert into TEST_AMAZONPRODUCTS (ASIN, Title, URL, ImageURL, SalesRank)"
-	               // + " values (?, ?, ?, ?, ?)";
-	        
-	      //String query = " insert into TEST_AFFILIATEPRODUCTS (ProductID, Title, Website, URL ,ImageURL)"
-             //+ " values (?, ?, ?, ?, ?)";
+	private void startConnection() throws SQLException {
 
-	              // create the mysql insert preparedstatement
-	             // PreparedStatement preparedStmt = conn.prepareStatement(query);
-	             // preparedStmt.setString (1, "10000");
-	             // preparedStmt.setString (2, "FidgetSpinner");
-	             // preparedStmt.setString (3, "www.fidgetspinner.com");
-	             // preparedStmt.setString (4, "www.fidgetspinner.com/image.jpg");
-	             // preparedStmt.setString (5, "1");
-	            //  preparedStmt.execute();
-	        
-	    }
-	    catch (Exception e)
-	    {
-	        System.out.println("NO CONNECTION =(");
-	    }
-	    
-	   
+		String url = "jdbc:mysql://sbclusteridapp124214.cluster-cpxq7h6ywwyb.us-east-1.rds.amazonaws.com:3306/";
+		String dbName = "sbdbapp26732";
+		String driver = "com.mysql.jdbc.Driver";
+		String userName = "sbertrdsuser802";
+		String password = "SBRDSPass0234!093243!2";
 
-	        // Now do something with the ResultSet ....
+		// String url =
+		// "jdbc:mysql://sbertserver566homo2324.cpxq7h6ywwyb.us-east-1.rds.amazonaws.com:3306/";
+		// String dbName = "sbertserver566homo2324";
+		// String driver = "com.mysql.jdbc.Driver";
+		// String userName = "sbertuser5homo2";
+		// String password = "SBertSuperHomo393";
+
+		try {
+			Class.forName(driver).newInstance();
+			conn = DriverManager.getConnection(url + dbName, userName, password);
+			System.out.println("Connected to the database");
+			// conn.close();
+			// System.out.println("Disconnected from database");
+
+			// String query = " insert into TEST_AMAZONPRODUCTS (ASIN, Title,
+			// URL, ImageURL, SalesRank)"
+			// + " values (?, ?, ?, ?, ?)";
+
+			// String query = " insert into TEST_AFFILIATEPRODUCTS (ProductID,
+			// Title, Website, URL ,ImageURL)"
+			// + " values (?, ?, ?, ?, ?)";
+
+			// create the mysql insert preparedstatement
+			// PreparedStatement preparedStmt = conn.prepareStatement(query);
+			// preparedStmt.setString (1, "10000");
+			// preparedStmt.setString (2, "FidgetSpinner");
+			// preparedStmt.setString (3, "www.fidgetspinner.com");
+			// preparedStmt.setString (4, "www.fidgetspinner.com/image.jpg");
+			// preparedStmt.setString (5, "1");
+			// preparedStmt.execute();
+		} catch (Exception e) {
+			System.out.println("NO CONNECTION =(");
+		}
+		// Now do something with the ResultSet ....
 	}
+
+	public void ReadConfig() throws IOException {
+		ArrayList<String> DebugArr = new ArrayList<String>();
+		String[] PushAffils = new String[2];
+		String[] ScrapeAm = new String[2];
+		String[] PushAm = new String[2];
+		String[] ExportAm = new String[2];
+		Reader in;
+		in = new FileReader("config/System.cfg");
+		BufferedReader buffer = new BufferedReader(in);
+		String line;
+		while ((line = buffer.readLine()) != null) {
+			DebugArr.add(line);
+		}
+		buffer.close();
+		PushAffils = DebugArr.get(0).split("=");
+		ScrapeAm = DebugArr.get(1).split("=");
+		PushAm = DebugArr.get(2).split("=");
+		ExportAm = DebugArr.get(3).split("=");
+
+		if (PushAffils[1].matches("true")) {
+			pushCSV = true;
+		}
+
+		if (ScrapeAm[1].matches("true")) {
+			scrapeAm = true;
+		}
+
+		if (PushAm[1].matches("true")) {
+			pushAmazon = true;
+		}
+
+		if (ExportAm[1].matches("true")) {
+			exportAmCSV = true;
+		}
+
+	}
+
 	public static void main(String[] args) throws SQLException {
-		System.out.println("Scrape starting...");
 		Scrape test = new Scrape();
 		
 		//Scanner s = new Scanner(System.in);
@@ -553,6 +639,39 @@ public class Scrape implements Comparator<ArrayList<String>> {
 		test.ExportCSV(test.MASTERAM);
 		}
 		
+
+		try {
+			test.ReadConfig();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (test.scrapeAm) {
+			System.out.println("Scrape starting...");
+			test.DoScrape();
+			System.out.println("Scrape completed!");
+		}
+		if (test.exportAmCSV) {
+			test.ExportCSV(test.MASTERAM);
+		}
+
+		if (test.pushCSV || test.pushAmazon) {
+			test.startConnection();
+		}
+
+		if (test.pushCSV) {
+			test.MASTERCSV.addAll(test.ParseCSVSS2("csv/28993.csv")); //needs redegit
+			//test.MASTERCSV.addAll(test.ParseCSVSS("csv/56707.csv")); pushed for now
+			test.MASTERCSV.addAll(test.ParseCSVSS2("csv/69358.csv")); //needs regedit
+			//test.MASTERCSV.addAll(test.ParseCSVCJ("csv/commissionjunction.csv"));
+			test.InsertInto(test.MASTERCSV, 1);
+		}
+
+		
+
+		if (test.pushAmazon) {
+			test.InsertInto(test.MASTERAM, 2);
+		}
+
 
 	}
 }
